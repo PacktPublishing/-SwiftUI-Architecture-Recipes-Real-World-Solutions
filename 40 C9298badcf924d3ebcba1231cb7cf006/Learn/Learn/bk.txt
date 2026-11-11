@@ -1,0 +1,155 @@
+
+//
+//  ViewController.swift
+//  Learn
+//
+//  Created by Mohammad Azam on 7/1/25.
+//
+
+import Foundation
+import UIKit
+import SwiftUI
+
+struct Customer: Identifiable {
+    let id = UUID()
+    var name: String
+}
+
+@Observable
+class CustomerStore {
+    var customers = [Customer(name: "John Doe"), Customer(name: "Mary Doe")]
+}
+
+class CustomerCollectionViewController: UICollectionViewController {
+    
+    let store = CustomerStore()
+    
+    init() {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 32, height: 60)
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        layout.minimumLineSpacing = 12
+        super.init(collectionViewLayout: layout)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
+        
+        self.title = "Customers"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        
+        // add a button on the bar
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Update", style: .plain, target: self, action: #selector(updateCustomer))
+    }
+    
+    @objc private func updateCustomer() {
+        store.customers[0].name = "Steven Smith"
+        print(store.customers)
+    }
+    
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        store.customers.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath)
+        
+        cell.configurationUpdateHandler = { [weak self] cell, state in
+            
+            let customer = self?.store.customers[indexPath.row]
+            
+            var content = UIListContentConfiguration.cell()
+            content.text = customer?.name
+            cell.contentConfiguration = content
+        }
+        
+        return cell
+    }
+}
+
+#Preview("CustomerCollectionViewController") {
+    UINavigationController(rootViewController: CustomerCollectionViewController())
+}
+
+
+struct ViewControllerWrapper: UIViewControllerRepresentable {
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        ViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        
+    }
+}
+
+@Observable
+class AuthStatus {
+    var isLoggedIn: Bool = false
+}
+
+class ViewController: UIViewController {
+    
+    private let authStatus = AuthStatus()
+    
+    lazy var authStatusToggle: UISwitch = {
+        let toggle = UISwitch()
+        toggle.translatesAutoresizingMaskIntoConstraints = false
+        toggle.isOn = false
+        toggle.addTarget(self, action: #selector(toggleChanged(_:)), for: .valueChanged)
+        return toggle
+    }()
+    
+    lazy var loginStatusLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Not logged in."
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    @objc private func toggleChanged(_ sender: UISwitch) {
+        if sender.isOn {
+            print("fired")
+            authStatus.isLoggedIn = true
+        } else {
+            authStatus.isLoggedIn = false
+        }
+    }
+    
+    override func viewWillLayoutSubviews() {
+        
+        super.viewWillLayoutSubviews()
+        print("viewwillLayoutSubviews")
+        
+        loginStatusLabel.text = authStatus.isLoggedIn ? "Logged In": "Not Logged In."
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.addSubview(authStatusToggle)
+        view.addSubview(loginStatusLabel)
+        
+        NSLayoutConstraint.activate([
+            authStatusToggle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            authStatusToggle.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loginStatusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loginStatusLabel.topAnchor.constraint(equalTo: authStatusToggle.bottomAnchor, constant: 20)
+        ])
+    }
+    
+}
+
+#Preview {
+    ViewController()
+}

@@ -1,0 +1,14 @@
+# macOS metadata from ZIP archives
+.DS_Store
+**/.DS_Store
+__MACOSX/
+**/__MACOSX/
+
+# Xcode per-user settings and workspace state
+**/xcuserdata/
+*.xcuserstate
+**/*.xcuserstate
+
+# Xcode build output
+DerivedData/
+**/DerivedData/

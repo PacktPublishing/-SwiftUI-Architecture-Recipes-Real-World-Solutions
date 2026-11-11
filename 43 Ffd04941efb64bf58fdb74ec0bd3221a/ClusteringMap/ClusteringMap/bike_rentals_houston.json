@@ -1,0 +1,12 @@
+[
+  { "name": "Apple Park Visitor Center", "lat": 37.3349, "lng": -122.0090 },
+  { "name": "Apple Infinite Loop (Original Campus)", "lat": 37.3317, "lng": -122.0307 },
+  { "name": "Main Street Cupertino", "lat": 37.3244, "lng": -122.0135 },
+  { "name": "Cupertino Library", "lat": 37.3230, "lng": -122.0311 },
+  { "name": "Cupertino Memorial Park", "lat": 37.3203, "lng": -122.0338 },
+  { "name": "Stevens Creek Blvd & De Anza Blvd", "lat": 37.3239, "lng": -122.0326 },
+  { "name": "Creekside Park", "lat": 37.3288, "lng": -122.0237 },
+  { "name": "Vallco Shopping District", "lat": 37.3248, "lng": -122.0149 },
+  { "name": "Cupertino City Center", "lat": 37.3224, "lng": -122.0320 },
+  { "name": "Homestead High School", "lat": 37.3412, "lng": -122.0428 }
+]
